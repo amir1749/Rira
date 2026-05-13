@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option csharp_namespace = "Rira.Grpc";
+
+package users;
+
+service UserService {
+
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+
+  rpc GetAllUser (GetAllUserRequest) returns (GetAllUserResponse);
+
+  rpc GetUserById (GetUserByIdRequest) returns (UserResponse);
+
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message CreateUserRequest {
+  
+  string firstName = 1;
+  string lastName = 2;
+  string ssn = 3;
+  string nationalCode = 4;
+}
+
+message CreateUserResponse {
+  string id = 1;
+}
+
+message GetUserByIdRequest {
+  string id = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string ssn = 4;
+  string nationalCode = 5;
+  bytes row_version = 6;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string ssn = 4;
+  string nationalCode = 5;
+  bytes row_version = 6;
+}
+
+message UpdateUserResponse {
+  bool success = 1;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+message GetAllUserResponse {
+  repeated UserResponse users = 1;
+}
+
+message GetAllUserRequest{
+}
