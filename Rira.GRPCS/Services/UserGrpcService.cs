@@ -37,7 +37,7 @@ namespace Rira.GRPCS.Services
             };
         }
 
-        public override async Task<GetAllUserResponse> GetAllUser(GetAllUserRequest request,ServerCallContext context)
+        public override async Task GetAllUser(GetAllUserRequest request, IServerStreamWriter<UserResponse> responseStream, ServerCallContext context)
         {
             var query = new GetAllUserQuery();
 
@@ -45,17 +45,19 @@ namespace Rira.GRPCS.Services
 
             var response = new GetAllUserResponse();
 
-            response.Users.AddRange(users.Data.Select(x => new UserResponse
+            foreach (var user in users.Data)
             {
-                Id = x.Id.ToString(),
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                Ssn = x.SSN,
-                NationalCode = x.NationalCode
-            }).ToList());
-
-            return response;
+                await responseStream.WriteAsync(new UserResponse
+                {
+                    Id = user.Id.ToString(),
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    NationalCode = user.NationalCode,
+                    Ssn = user.SSN
+                });
+            }
         }
+
 
         public override async Task<UserResponse> GetUserById(GetUserByIdRequest request, ServerCallContext context)
         {
